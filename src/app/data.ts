@@ -91,6 +91,11 @@ export const DATA: Meal[] = [
     description: "with corn and carrots",
 },
 ];
-  function expandMeal(item: Meal) {
-  
-  };
+function expandMeal(item: Meal) {
+
+};
+
+export default function getDefaultMeals(): Meal[] 
+{ 
+  return DATA; 
+}

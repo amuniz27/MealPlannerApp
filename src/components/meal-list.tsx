@@ -1,12 +1,7 @@
 import React from "react";
 import { FlatList, SafeAreaView, Text, StatusBar, StyleSheet, Task, ActivityIndicator, View, TouchableOpacity } from "react-native";
-//import { BaseMealProps, IconButtonProps, MealProps, MealState, MealsState, SerializedMeal } from '../interfaces/MealProps';
-import { Meal } from './meal.js';
 import {DATA, defaultProps} from '../app/data';
 import { IMealService, MealService } from "../interfaces/meal.service";
-//import ErrorBoundary from "../ErrorBoundary";
-//import  Icon  from 'react-native-vector-icons/SimpleLineIcons';
-import { storage } from '../app/storage'
 
 'use dom';
 const AddIconButton = ({ onPress, icon }: IconButtonProps) => (
