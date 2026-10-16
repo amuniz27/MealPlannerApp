@@ -1,23 +1,10 @@
-import { Meal } from "@/components/meal";
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import * as Device from "expo-device";
-import { useState } from "react";
-import {
-  Alert,
-  FlatList,
-  Linking,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-//import { DATA } from "./data";
+import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, ScrollView } from "react-native";
+import { MealItem, DATA } from "../components/meal"
+import { SafeAreaFrameContext } from "react-native-safe-area-context";
+
 // Modal States
 //const [modalVisible, setModalVisible] = useState<boolean>(false);
 //const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
@@ -44,17 +31,41 @@ function getDevMenuHint() {
 }
 
 function Header() {
-  return (<View><Text style={styles.title}>Meal Planner</Text></View>);
+  return (
+    <View>
+      <Text style={styles.title}>Meal Planner</Text>
+    </View>
+  );
 }
 
 export default function HomeScreen() {
-  // Form States
-  return (
-      <SafeAreaView style={styles.container}>
-        <Header></Header>
-      </SafeAreaView>
+
+  const renderItem: ListRenderItem<MealItem> = ({ item }) => (
+    <View style={{ padding: 20 }}>
+      <Text>{item.name}</Text>
+    </View>
   );
-}
+  
+  //onst [selectedMeal, setSelectedMeal] = useState<MealProps | null>(null);
+
+  //const renderMeal: ListRenderItem<MealProps> = ( { item } ) => {
+
+    return (
+        <ScrollView>
+          <FlatList data = { DATA }
+            renderItem = {renderItem}
+            keyExtractor = {(item) => item.name}
+            ListHeaderComponent={ Header }/>
+        </ScrollView>
+      )
+
+  }
+
+  // Form States
+//  const defaultMeals = getDefaultMeals();
+ // const renderItem: ListRenderItem<Meal> = ({ item }) => (
+  //  <Meal prop={item, index} />
+  //);
 
 const styles = StyleSheet.create({
   container: {

@@ -1,19 +1,20 @@
-import { Meal } from '../components/meal.js';
+import { MealProps } from "../interfaces/meal-props.js";
 
-export const defaultProps: Meal = {
-    name: '',
-    description: '',
-    last_prepared: null,
-    next_scheduled: null,
-    recipe_url: null
-  }
-  
-export const DATA: Meal[] = [
+export const defaultProps: MealProps = {
+  id: "",
+  name: "",
+  description: "",
+  last_prepared: null,
+  next_scheduled: null,
+  recipe_url: null,
+};
+
+export const DATA: MealProps[] = [
   {
     ...defaultProps,
     name: "Barbecue Shredded Pork",
     description: "with mac'n'cheese",
-    last_prepared: "2025-01-01"
+    last_prepared: "2025-01-01",
   },
   {
     ...defaultProps,
@@ -24,13 +25,14 @@ export const DATA: Meal[] = [
     ...defaultProps,
     name: "Chicken with Rice-A-Roni",
     description: "",
-    last_prepared: "2025-01-01"
+    last_prepared: "2025-01-01",
   },
   {
     ...defaultProps,
     name: "Chili",
     description: "",
-  },  {
+  },
+  {
     ...defaultProps,
     name: "Cornbread chicken pot pie",
     description: "",
@@ -61,9 +63,10 @@ export const DATA: Meal[] = [
     description: "Sesame chicken with brown or fried rice",
   },
   {
-      ...defaultProps,
-      name: "Spaghetti",
-      description: "Pot-sized spaghetti past with italian sauce and chicken meatballs",
+    ...defaultProps,
+    name: "Spaghetti",
+    description:
+      "Pot-sized spaghetti past with italian sauce and chicken meatballs",
   },
   {
     ...defaultProps,
@@ -71,31 +74,29 @@ export const DATA: Meal[] = [
     description: "With white rice",
   },
   {
-      ...defaultProps,
-      name: "Tacos",
-      description: "Pot-sized spaghetti pasta with italian sauce and chicken meatballs",
+    ...defaultProps,
+    name: "Tacos",
+    description:
+      "Pot-sized spaghetti pasta with italian sauce and chicken meatballs",
   },
   {
-      ...defaultProps,
-      name: "Thai chicken",
-      description: "With white rice",
+    ...defaultProps,
+    name: "Thai chicken",
+    description: "With white rice",
   },
   {
-      ...defaultProps,
-      name: "Tortellini",
-      description: "Tortellini with tomato/afredo cream sauce",
+    ...defaultProps,
+    name: "Tortellini",
+    description: "Tortellini with tomato/afredo cream sauce",
   },
   {
     ...defaultProps,
     name: "Turkey and mashed/sweet potatos",
     description: "with corn and carrots",
-},
+  },
 ];
-function expandMeal(item: Meal) {
+function expandMeal(item: MealProps) {}
 
-};
-
-export default function getDefaultMeals(): Meal[] 
-{ 
-  return DATA; 
+export default function getDefaultMeals(): MealProps[] {
+  return DATA;
 }
