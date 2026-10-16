@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import * as Device from "expo-device";
-import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, ScrollView } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, ScrollView, Button } from "react-native";
 import { MealItem, DATA } from "../components/meal"
 import { SafeAreaFrameContext } from "react-native-safe-area-context";
 
@@ -32,8 +32,16 @@ function getDevMenuHint() {
 
 function Header() {
   return (
-    <View>
+    <View style={styles.header}>
       <Text style={styles.title}>Meal Planner</Text>
+    </View>
+  );
+}
+
+function Footer() {
+  return (
+    <View style={styles.footer}>
+      <Button title="Add"/>
     </View>
   );
 }
@@ -43,6 +51,7 @@ export default function HomeScreen() {
   const renderItem: ListRenderItem<MealItem> = ({ item }) => (
     <View style={{ padding: 20 }}>
       <Text>{item.name}</Text>
+      <Text>Date Last Prepared: {item.last_prepared}</Text>
     </View>
   );
   
@@ -51,13 +60,15 @@ export default function HomeScreen() {
   //const renderMeal: ListRenderItem<MealProps> = ( { item } ) => {
 
     return (
-        <ScrollView>
-          <FlatList data = { DATA }
-            renderItem = {renderItem}
-            keyExtractor = {(item) => item.name}
-            ListHeaderComponent={ Header }/>
-        </ScrollView>
-      )
+      <View style = {styles.container}>
+        <Header></Header>
+        <FlatList data = { DATA }
+          renderItem = {renderItem}
+          keyExtractor = {(item) => item.name}
+        />        
+        <Footer></Footer>
+      </View>
+    )
 
   }
 
@@ -70,8 +81,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: "center"
   },
   safeArea: {
     flex: 1,
@@ -80,6 +90,22 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.three,
     maxWidth: MaxContentWidth,
+  },
+  footer: {
+    height: 60,
+    backgroundColor: '#333',
+    justifyContent: 'center',
+    alignItems: 'center',
+ },
+ footerText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  header: {
+    height: 60,
+    backgroundColor: '#1E90FF',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     textAlign: "center",
