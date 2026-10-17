@@ -1,20 +1,12 @@
-import { MealProps } from "../interfaces/meal-props.js";
+import { MealItem } from "../components/meal";
+import { defaultProps } from "./default-props";
 
-export const defaultProps: MealProps = {
-  id: "",
-  name: "",
-  description: "",
-  last_prepared: null,
-  next_scheduled: null,
-  recipe_url: null,
-};
-
-export const DATA: MealProps[] = [
+const DATA: MealItem[] = [
   {
     ...defaultProps,
     name: "Barbecue Shredded Pork",
     description: "with mac'n'cheese",
-    last_prepared: "2025-01-01",
+    last_prepared: "2026-08-05",
   },
   {
     ...defaultProps,
@@ -25,7 +17,7 @@ export const DATA: MealProps[] = [
     ...defaultProps,
     name: "Chicken with Rice-A-Roni",
     description: "",
-    last_prepared: "2025-01-01",
+    last_prepared: "2026-10-14",
   },
   {
     ...defaultProps,
@@ -76,8 +68,10 @@ export const DATA: MealProps[] = [
   {
     ...defaultProps,
     name: "Tacos",
+    last_prepared: "2026-07-14",
+    next_scheduled: "2026-10-18", 
     description:
-      "Pot-sized spaghetti pasta with italian sauce and chicken meatballs",
+      "Ground turkey with taco seasoning on soft taco shells",
   },
   {
     ...defaultProps,
@@ -95,8 +89,10 @@ export const DATA: MealProps[] = [
     description: "with corn and carrots",
   },
 ];
-function expandMeal(item: MealProps) {}
 
-export default function getDefaultMeals(): MealProps[] {
+export { DATA }
+//function expandMeal(item: MealProps) {}
+
+/*export default function getDefaultMeals(): MealProps[] {
   return DATA;
-}
+}*/

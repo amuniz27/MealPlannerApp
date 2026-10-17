@@ -1,9 +1,11 @@
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import * as Device from "expo-device";
-import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, ScrollView, Button } from "react-native";
-import { MealItem, DATA } from "../components/meal"
-import { SafeAreaFrameContext } from "react-native-safe-area-context";
+import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem} from "react-native";
+import { MealItem } from "../components/meal"
+import { DATA } from "../mock-data/data"
+import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
+import NewMeal from "@/components/new-meal";
 
 // Modal States
 //const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -39,44 +41,41 @@ function Header() {
 }
 
 function Footer() {
-  return (
-    <View style={styles.footer}>
-      <Button title="Add"/>
+    const AddNewMeal = () => {
+      console.log("Show Add New Meal");
+      <NewMeal></NewMeal>
+    }
+    return (<View style={styles.footer}>
+      <button title="Add" onClick = { AddNewMeal }>Add</button>
     </View>
   );
 }
 
 export default function HomeScreen() {
 
-  const renderItem: ListRenderItem<MealItem> = ({ item }) => (
-    <View style={{ padding: 20 }}>
-      <Text>{item.name}</Text>
-      <Text>Date Last Prepared: {item.last_prepared}</Text>
-    </View>
-  );
-  
-  //onst [selectedMeal, setSelectedMeal] = useState<MealProps | null>(null);
-
-  //const renderMeal: ListRenderItem<MealProps> = ( { item } ) => {
-
-    return (
-      <View style = {styles.container}>
-        <Header></Header>
-        <FlatList data = { DATA }
-          renderItem = {renderItem}
-          keyExtractor = {(item) => item.name}
-        />        
-        <Footer></Footer>
+  const renderItem: ListRenderItem<MealItem> = ({ item, index }) => {
+    const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f0f0f0';
+    return(
+      <View style={ [styles.item, {backgroundColor}] }>
+        <Text style= {styles.title}>{item.name}</Text>
+        {item.last_prepared && <Text style= {styles.content}>Date Last Prepared: {new Date(item.last_prepared).toLocaleDateString()}</Text>}
+        {item.next_scheduled && <Text style= {styles.content}>Scheduled For: {new Date(item.next_scheduled).toLocaleDateString()}</Text>}
+        <Text style={styles.description}>{item.description}</Text>
+        {item.recipe_url && <Text style={styles.content}>Recipe: {item.recipe_url}</Text>}
       </View>
-    )
-
+    );
   }
-
-  // Form States
-//  const defaultMeals = getDefaultMeals();
- // const renderItem: ListRenderItem<Meal> = ({ item }) => (
-  //  <Meal prop={item, index} />
-  //);
+  return (
+    <SafeAreaView style = {styles.container}>
+      <Header></Header>
+      <FlatList data = { DATA }
+        renderItem = {renderItem}
+        keyExtractor = {(item) => item.name}
+      />        
+      <Footer></Footer>
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 60,
-    backgroundColor: '#333',
+    backgroundColor: '#c2dbf5',
     justifyContent: 'center',
     alignItems: 'center',
  },
@@ -102,14 +101,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   header: {
-    height: 60,
-    backgroundColor: '#1E90FF',
+    height: 40,
+    backgroundColor: '#c2dbf5',
     justifyContent: 'center',
     alignItems: 'center',
+    fontWeight: "bold",
   },
   title: {
-    textAlign: "center",
-    fontSize: 20,
+    textAlign: "left",
+    fontSize: 16,
     fontWeight: "bold",
+  },
+  content: {
+    textAlign: "left",
+    fontSize: 14,
+    fontWeight: "600",
+    paddingLeft: 10,
+  },
+  description: {
+    textAlign: "left",
+    margin: 10,
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  item: {
+    padding: 10,
+    borderWidth: 4,
+    borderStyle: 'solid',
+    borderColor: "#a5272700"
   },
 });
