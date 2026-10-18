@@ -1,11 +1,13 @@
 import { ThemedText } from "@/components/themed-text";
 import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
 import * as Device from "expo-device";
-import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem} from "react-native";
+import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, Button} from "react-native";
 import { MealItem } from "../components/meal"
 import { DATA } from "../mock-data/data"
+import Footer from "../components/footer"
 import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
 import NewMeal from "@/components/new-meal";
+import { useState } from "react";
 
 // Modal States
 //const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -40,21 +42,13 @@ function Header() {
   );
 }
 
-function Footer() {
-    const AddNewMeal = () => {
-      console.log("Show Add New Meal");
-      <NewMeal></NewMeal>
-    }
-    return (<View style={styles.footer}>
-      <button title="Add" onClick = { AddNewMeal }>Add</button>
-    </View>
-  );
-}
 
 export default function HomeScreen() {
 
+  const [addingMeal, setAddingMeal] = useState(false);
   const renderItem: ListRenderItem<MealItem> = ({ item, index }) => {
     const backgroundColor = index % 2 === 0 ? '#ffffff' : '#f0f0f0';
+
     return(
       <View style={ [styles.item, {backgroundColor}] }>
         <Text style= {styles.title}>{item.name}</Text>
@@ -68,11 +62,12 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style = {styles.container}>
       <Header></Header>
-      <FlatList data = { DATA }
+      {!addingMeal && <FlatList data = { DATA }
         renderItem = {renderItem}
         keyExtractor = {(item) => item.name}
-      />        
-      <Footer></Footer>
+      />}
+      {addingMeal && <NewMeal></NewMeal>}       
+      <Footer adding={addingMeal} onChangeAddingStatus={setAddingMeal}></Footer>
     </SafeAreaView>
   );
 }

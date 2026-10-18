@@ -2,8 +2,12 @@ import { FlatList, Platform, StyleSheet, Text, View, ListRenderItem, TextInput} 
 import {defaultProps} from '../mock-data/default-props';
 
 export default function NewMeal() {
+
+    //const [addingMeal, setAddingMeal] = useState(false);
+    //setAddingMeal(true);
+
     return(
-      <View>
+      <View style={styles.container}>
         <Text>Name:</Text>        
         <TextInput style={styles.title}>{defaultProps.name}</TextInput>
         {defaultProps.last_prepared && <TextInput style= {styles.content}>Date Last Prepared: {new Date(defaultProps.last_prepared).toLocaleDateString()}</TextInput>}
@@ -17,6 +21,10 @@ export default function NewMeal() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
   title: {
     textAlign: "left",
     fontSize: 16,
