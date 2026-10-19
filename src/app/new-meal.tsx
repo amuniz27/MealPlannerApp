@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput} from "react-native";
 import {defaultProps} from '../mock-data/default-props';
 import { MealItem } from "@/components/meal";
 import { useState } from "react";
+import DateInput from "@/components/date-input";
 
 export default function NewMeal() {
 
@@ -13,6 +14,7 @@ export default function NewMeal() {
     const [dateInput, setDateInput] = useState('');
     const [lastPreparedDateInput, setLastPreparedDateInput] = useState('');
     const [recipeUrl, setRecipeUrl] = useState('');
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
 
     return(
       <View style={styles.container}>
@@ -40,6 +42,12 @@ export default function NewMeal() {
             onChangeText={(text) => setLastPreparedDateInput(text)}>
           </TextInput>
 
+          <DateInput 
+            showing={datePickerOpen} 
+            dateLabel="Test with DatePicker" 
+            onDatePickerStatusChange={setDatePickerOpen} 
+            setDateValue={setLastPrepared}>            
+          </DateInput>
 
           <Text style ={styles.label}>Schedule For:</Text>
           <TextInput
