@@ -1,6 +1,6 @@
-import DateTimePicker, { DateTimePickerChangeEvent } from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import {
+    Button,
     Platform,
     Pressable,
     StyleSheet,
@@ -8,65 +8,104 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 export interface DateInputProps {
-  dateLabel: string;
-  showing: boolean; // The state value passed down
-  onDatePickerStatusChange: (newValue: boolean) => void; // The callback function to update parent state
+  dateValue: Date; // current date value
   setDateValue: (newValue: Date) => void; // call back to report back the date selected
 }
 
 export default function DateInput(props: DateInputProps) {
-  const [dateInput, setDateInput] = useState(new Date());
-
-  const onDateChange = (event: DateTimePickerChangeEvent, date: Date) =>
-  {
-    // Android requires manually hiding the modal once a selection or dismissal happens
-    if (Platform.OS === "android") {
-      props.onDatePickerStatusChange(false);
+    const [dateValue, setDateValue] = useState(new Date());
+   
+    const showAndroidPicker = () => {
+        // 2. Safe Platform Wrapper
+        if (Platform.OS === 'android') {
+            (DateTimePickerAndroid as any).open({
+                value: dateValue,
+                mode: 'date',
+                is24Hour: true,
+                onChange: (event: any, selectedDate: Date) => {                    
+                    if (event.type === 'set' && selectedDate) {
+                        setDateValue(selectedDate);
+                    }
+                    // The 'dismissed' type handles the cancel button natively
+                },
+            });
+        }
     }
 
-    // If the user didn't tap "Cancel", update the state
-    if (event.nativeEvent) {
-      setDateInput(new Date(event.nativeEvent.timestamp));
-    }
-      props.onDatePickerStatusChange(false);
+    return (
+    <View style={{ padding: 24 }}>
+      <Button title="Select Date" onPress={showAndroidPicker} />
+      <Text>Selected: {dateValue.toLocaleDateString()}</Text>
+    </View>);
+  /*  const onDateChange = (event: any, selectedDate: Date) => {
 
+        const { type } = event;
+
+        console.log(`event: ${JSON.stringify(event)}`);
+
+        // Android requires manually hiding the modal once a selection or dismissal happens
+        if (Platform.OS === "android") {
+            setDateTimePickerVisible(false);
+        }
+        if(type == 'dismissed')
+        {
+            setDateTimePickerVisible(false);
+            console.log('User cancedlled date entry');
+            return;
+        }
+
+        if (type == 'set' && selectedDate) {
+            console.log('type is set');
+        }
+        // If the user didn't tap "Cancel", update the state
+        if (event.nativeEvent) {
+            console.log(
+                `setting ${props.dateLabel} to ${new Date(event.nativeEvent.timestamp)}`);
+            props.setDateValue(new Date(event.nativeEvent.timestamp));
+            setDateTimePickerVisible(false);
+        }
   };
-
-  return (
+*/
+}
+  /*return (
     <View style={styles.container}>
       <Text style={styles.label}>{props.dateLabel}</Text>
 
-      {/* Wrapping the input makes the whole field tappable */}
-      <Pressable onPress={() => props.onDatePickerStatusChange(true)}>
+      <Pressable style={styles.pressArea} onPress={() => setDateTimePickerVisible(true)}>
         <View pointerEvents="none">
           <TextInput
             style={styles.input}
-            placeholder="Select a date"
-            value={dateInput.toLocaleDateString()}
-            editable={false} /* Prevents the soft keyboard from pushing up */
+            placeholder={
+              props.placeholder ? props.placeholder : "Select a date"
+            }
+            value={props.dateValue?.toLocaleDateString()}
+            editable={false} // Prevents the soft keyboard from pushing up 
           />
         </View>
       </Pressable>
 
-      {/* Conditionally render the modal trigger based on visibility state */}
-      {props.showing && (
-        <DateTimePicker
-          value={dateInput}
+      { dateTimePickerVisible && (
+        <DateTimePickerAndroid
+          value={props.dateValue ?? new Date()}
           mode="date"
           display={Platform.OS === "android" ? "calendar" : "default"}
           onValueChange={onDateChange}
         />
       )}
     </View>
-  );
-}
+     }
+  );*/
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center"
+    justifyContent: "flex-start",
+  },
+  pressArea: {
+    borderWidth: 2,
+    borderColor: "#ff0000"
   },
   input: {
     height: 40,
