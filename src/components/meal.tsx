@@ -10,11 +10,11 @@ interface MealItem {
 
 const defaultProps: MealItem = {
   id: "",
-  name: "",
-  description: "",
+  name: "<Name>",
+  description: "<Description",
   last_prepared: null,
   next_scheduled: null,
-  recipe_url: null,
+  recipe_url: "Recipe Url",
 };
 
 export { MealItem }

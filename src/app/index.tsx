@@ -6,8 +6,9 @@ import { MealItem } from "../components/meal"
 import { DATA } from "../mock-data/data"
 import Footer from "../components/footer"
 import { SafeAreaFrameContext, SafeAreaView } from "react-native-safe-area-context";
-import NewMeal from "@/components/new-meal";
+import NewMeal from "@/app/new-meal";
 import { useState } from "react";
+import Header from "@/components/header";
 
 // Modal States
 //const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -34,15 +35,6 @@ function getDevMenuHint() {
   );
 }
 
-function Header() {
-  return (
-    <View style={styles.header}>
-      <Text style={styles.title}>Meal Planner</Text>
-    </View>
-  );
-}
-
-
 export default function HomeScreen() {
 
   const [addingMeal, setAddingMeal] = useState(false);
@@ -51,7 +43,7 @@ export default function HomeScreen() {
 
     return(
       <View style={ [styles.item, {backgroundColor}] }>
-        <Text style= {styles.title}>{item.name}</Text>
+        <Text style= {styles.mealTitle}>{item.name}</Text>
         {item.last_prepared && <Text style= {styles.content}>Date Last Prepared: {new Date(item.last_prepared).toLocaleDateString()}</Text>}
         {item.next_scheduled && <Text style= {styles.content}>Scheduled For: {new Date(item.next_scheduled).toLocaleDateString()}</Text>}
         <Text style={styles.description}>{item.description}</Text>
@@ -95,14 +87,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  header: {
-    height: 40,
-    backgroundColor: '#c2dbf5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: "bold",
-  },
-  title: {
+  mealTitle: {
     textAlign: "left",
     fontSize: 16,
     fontWeight: "bold",
