@@ -1,17 +1,32 @@
 import DateInput from "@/components/date-input";
 import { MealItem } from "@/components/meal";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { defaultProps } from "../mock-data/default-props";
 
-export default function NewMeal() {
-  const newMeal: MealItem = { ...defaultProps };
+interface NewMealProps {
+//  mealAdditionConfirmed?: boolean; // false - it was cancelled, true: it was added, null - in progress
+  onNewMealClosed: (meal: MealItem | undefined) => void;
+}
+
+export default function NewMeal(props: NewMealProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lastPrepared, setLastPrepared] = useState<Date | undefined>();
   const [scheduledDate, setScheduledDate] = useState<Date | undefined>();
   const [recipeUrl, setRecipeUrl] = useState("");
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const newMeal: MealItem = { 
+    ...defaultProps,
+    name,
+    description,
+    last_prepared: lastPrepared,
+    next_scheduled: scheduledDate,
+    recipe_url: recipeUrl
+  };
+  
+  interface NewMealProps {
+    setMealAdded?: boolean; // The state value passed down
+  }
 
   const scheduledDateChange = (newDate: Date) => {
     console.log(`updating state for scheduledDate to ${newDate}`);
@@ -21,11 +36,6 @@ export default function NewMeal() {
   const lastPreparedDateChange = (newDate: Date) => {
     console.log(`updating state for LastPrepared to ${newDate}`);
     setLastPrepared(newDate);
-  };
-
-  const datePickerVisibilityChanged = (newValue: boolean) => {
-    console.log(`setting date picker visiblity to ${newValue}`)
-    setDatePickerOpen(newValue);
   };
 
   return (
@@ -65,6 +75,8 @@ export default function NewMeal() {
         value={recipeUrl}
         onChangeText={(newText) => setRecipeUrl(newText)}
       ></TextInput>
+
+      <Button title="Save" onPress={() => props.onNewMealClosed(newMeal)}></Button>
     </View>
   );
 }
