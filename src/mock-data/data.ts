@@ -1,4 +1,4 @@
-import { MealItem } from "../components/meal";
+import { MealItem } from "../components/functional-components/meal";
 import { defaultProps } from "./default-props";
 
 const DATA: MealItem[] = [
@@ -69,9 +69,8 @@ const DATA: MealItem[] = [
     ...defaultProps,
     name: "Tacos",
     last_prepared: "2026-07-14",
-    next_scheduled: "2026-10-18", 
-    description:
-      "Ground turkey with taco seasoning on soft taco shells",
+    next_scheduled: "2026-10-18",
+    description: "Ground turkey with taco seasoning on soft taco shells",
   },
   {
     ...defaultProps,
@@ -90,7 +89,7 @@ const DATA: MealItem[] = [
   },
 ];
 
-export { DATA }
+export { DATA };
 //function expandMeal(item: MealProps) {}
 
 /*export default function getDefaultMeals(): MealProps[] {

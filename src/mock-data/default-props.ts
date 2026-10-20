@@ -1,4 +1,4 @@
-import { MealItem } from '../components/meal'
+import { MealItem } from "../components/functional-components/meal";
 
 export const defaultProps: MealItem = {
   id: "",
