@@ -13,19 +13,23 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Footer from "../components/footer";
+import Footer from "../components/layout/footer";
 import { MealItem } from "../components/functional-components/meal";
 import Header from "../components/layout/header";
+import EditMeal from "./edit-meal";
+import { DATA } from "@/mock-data/data";
 
 function HomeScreen() {
+  const [nextId, setnextId] = useState<number>(0);
   const [addingMeal, setAddingMeal] = useState(false);
-  const [mealList, setMealList] = useState<MealItem[]>();
-  const [mealToAdd, setMealToAdd] = useState(null);
+  const [mealUpdated, setMealUpdated] = useState(false);
+  const [mealList, setMealList] = useState<MealItem[]>([]);
   const [mealDeleted, setMealDeleted] = useState(false);
   const onMealAdded = (newMeal: MealItem | undefined) => {
-    console.log("Handling closing of meal addition");
-    console.log(newMeal);
+    // console.log("Handling closing of meal addition");
     if (newMeal) {
+      newMeal.id = nextId;
+      setnextId(nextId + 1);
       if (!mealList) {
         setMealList([newMeal]);
       } else {
@@ -34,20 +38,36 @@ function HomeScreen() {
     }
     setAddingMeal(false);
   };
+  const [updatingMeal, setUpdatingMeal] = useState<MealItem | null>(null);
+
+  const updateMeal = (original: MealItem, updated: MealItem | null) => {
+    if (updated) {
+      const newMealList = mealList.map((m) =>
+        m.id == original.id ? updated : m,
+      );
+      // console.log(newMealList);
+      setMealList(newMealList);
+      setMealUpdated(true);
+    }
+    setUpdatingMeal(null);
+  };
 
   useEffect(() => {
+    const useMockedData = false;
+    let loadedData: MealItem[] = [];
     const getData = async () => {
       try {
-        console.log("loading saved meals");
-        const value = await AsyncStorage.getItem("meal-planner.meals");
-        console.log(value);
-        if (value !== null) {
-          // value previously stored
-          const dataLaded: MealItem[] = JSON.parse(value);
-          setMealList(dataLaded);
+        // console.log("loading saved meals");
+        if (useMockedData) {
+          loadedData = DATA;
         } else {
-          setMealList([]);
+          const value = await AsyncStorage.getItem("meal-planner.meals");
+          if (value !== null) {
+            // value previously stored
+            loadedData = JSON.parse(value);
+          }
         }
+        setMealList(loadedData);
       } catch (e) {
         // error reading value
         console.log("Error encountered trying to load data:");
@@ -60,10 +80,7 @@ function HomeScreen() {
   useEffect(() => {
     const updateData = async () => {
       try {
-        console.log("in updateData");
         if (mealList) {
-          console.log("mealList was updated, storing updated list");
-          console.log(mealList);
           await AsyncStorage.setItem(
             "meal-planner.meals",
             JSON.stringify(mealList),
@@ -79,16 +96,16 @@ function HomeScreen() {
     if (mealList) {
       updateData();
     }
-  }, [mealList, addingMeal, mealDeleted]);
+  }, [mealList, addingMeal, mealDeleted, mealUpdated]);
   const renderItem: ListRenderItem<MealItem> = ({ item, index }) => {
     const backgroundColor = index % 2 === 0 ? "#ffffff" : "#f0f0f0";
 
-    const editMeal = (item: MealItem) => {
-      console.log("editing meal");
-      console.log(item);
-    };
     const findIndexOfItem = (mealItem: MealItem) => {
-      return mealList?.findIndex((x) => x.name === mealItem.name);
+      return mealList?.findIndex((x) => x.id === mealItem.id);
+    };
+
+    const editSelectedMeal = (item: MealItem) => {
+      return <EditMeal mealItem={item} onSaveUpdate={updateMeal} />;
     };
 
     const confirmThenDeleteMeal = (item: MealItem) => {
@@ -116,7 +133,7 @@ function HomeScreen() {
             {
               text: "Delete",
               onPress: () => {
-                console.log("Delete Confirmed");
+                // console.log("Delete Confirmed");
                 deleteMeal(item);
                 setMealDeleted(true);
               },
@@ -149,7 +166,7 @@ function HomeScreen() {
         <Pressable style={styles.buttonBar}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => editMeal(item)}
+            onPress={() => setUpdatingMeal(item)}
           >
             <Text style={styles.buttonText}>Edit</Text>
           </TouchableOpacity>
@@ -166,7 +183,7 @@ function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Header></Header>
-      {!addingMeal && (
+      {!addingMeal && !updatingMeal && (
         <FlatList
           data={mealList ? [...mealList] : []}
           renderItem={renderItem}
@@ -174,7 +191,15 @@ function HomeScreen() {
         />
       )}
       {addingMeal && <NewMeal onNewMealClosed={onMealAdded}></NewMeal>}
-      <Footer adding={addingMeal} onChangeAddingStatus={setAddingMeal}></Footer>
+      {updatingMeal && (
+        <EditMeal mealItem={updatingMeal} onSaveUpdate={updateMeal}></EditMeal>
+      )}
+      {!addingMeal && !updatingMeal && (
+        <Footer
+          adding={addingMeal}
+          onChangeAddingStatus={setAddingMeal}
+        ></Footer>
+      )}
     </SafeAreaView>
   );
 }

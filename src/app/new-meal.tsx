@@ -24,17 +24,11 @@ export default function NewMeal(props: NewMealProps) {
     recipe_url: recipeUrl,
   };
 
-  interface NewMealProps {
-    setMealAdded?: boolean; // The state value passed down
-  }
-
   const scheduledDateChange = (newDate: Date) => {
-    console.log(`updating state for scheduledDate to ${newDate}`);
     setScheduledDate(newDate);
   };
 
   const lastPreparedDateChange = (newDate: Date) => {
-    console.log(`updating state for LastPrepared to ${newDate}`);
     setLastPrepared(newDate);
   };
 
