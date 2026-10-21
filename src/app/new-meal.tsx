@@ -1,31 +1,35 @@
-import DateInput from "@/components/date-input";
-import { MealItem } from "@/components/meal";
+import DateInput from "@/components/functional-components/date-input";
+import { MealItem } from "@/components/functional-components/meal";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { defaultProps } from "../mock-data/default-props";
 
-export default function NewMeal() {
-  const newMeal: MealItem = { ...defaultProps };
+interface NewMealProps {
+  //  mealAdditionConfirmed?: boolean; // false - it was cancelled, true: it was added, null - in progress
+  onNewMealClosed: (meal: MealItem | undefined) => void;
+}
+
+export default function NewMeal(props: NewMealProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lastPrepared, setLastPrepared] = useState<Date | undefined>();
   const [scheduledDate, setScheduledDate] = useState<Date | undefined>();
   const [recipeUrl, setRecipeUrl] = useState("");
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const newMeal: MealItem = {
+    ...defaultProps,
+    name,
+    description,
+    last_prepared: lastPrepared,
+    next_scheduled: scheduledDate,
+    recipe_url: recipeUrl,
+  };
 
   const scheduledDateChange = (newDate: Date) => {
-    console.log(`updating state for scheduledDate to ${newDate}`);
     setScheduledDate(newDate);
   };
 
   const lastPreparedDateChange = (newDate: Date) => {
-    console.log(`updating state for LastPrepared to ${newDate}`);
     setLastPrepared(newDate);
-  };
-
-  const datePickerVisibilityChanged = (newValue: boolean) => {
-    console.log(`setting date picker visiblity to ${newValue}`)
-    setDatePickerOpen(newValue);
   };
 
   return (
@@ -46,13 +50,17 @@ export default function NewMeal() {
         onChangeText={(newText) => setDescription(newText)}
       ></TextInput>
 
-      <Text style={styles.label}>Last Prepared: {lastPrepared?.toLocaleDateString()}</Text>
+      <Text style={styles.label}>
+        Last Prepared: {lastPrepared?.toLocaleDateString()}
+      </Text>
       <DateInput
         dateValue={lastPrepared ?? new Date()}
         setDateValue={lastPreparedDateChange}
       ></DateInput>
 
-      <Text style={styles.label}>Scheduled: {scheduledDate?.toLocaleDateString()}</Text>
+      <Text style={styles.label}>
+        Scheduled: {scheduledDate?.toLocaleDateString()}
+      </Text>
       <DateInput
         dateValue={scheduledDate ?? new Date()}
         setDateValue={scheduledDateChange}
@@ -65,6 +73,11 @@ export default function NewMeal() {
         value={recipeUrl}
         onChangeText={(newText) => setRecipeUrl(newText)}
       ></TextInput>
+
+      <Button
+        title="Save"
+        onPress={() => props.onNewMealClosed(newMeal)}
+      ></Button>
     </View>
   );
 }
