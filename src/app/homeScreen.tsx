@@ -38,6 +38,7 @@ function HomeScreen() {
     }
     setAddingMeal(false);
   };
+  const onNewMealCancelled = () => setAddingMeal(false);
   const [updatingMeal, setUpdatingMeal] = useState<MealItem | null>(null);
 
   const updateMeal = (original: MealItem, updated: MealItem | null) => {
@@ -53,7 +54,7 @@ function HomeScreen() {
   };
 
   useEffect(() => {
-    const useMockedData = false;
+    const useMockedData = true;
     let loadedData: MealItem[] = [];
     const getData = async () => {
       try {
@@ -187,10 +188,15 @@ function HomeScreen() {
         <FlatList
           data={mealList ? [...mealList] : []}
           renderItem={renderItem}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => String(item.id)}
         />
       )}
-      {addingMeal && <NewMeal onNewMealClosed={onMealAdded}></NewMeal>}
+      {addingMeal && (
+        <NewMeal
+          onNewMealCancelled={onNewMealCancelled}
+          onNewMealClosed={onMealAdded}
+        ></NewMeal>
+      )}
       {updatingMeal && (
         <EditMeal mealItem={updatingMeal} onSaveUpdate={updateMeal}></EditMeal>
       )}
@@ -257,7 +263,9 @@ const styles = StyleSheet.create({
     // Spacing
     paddingHorizontal: 10,
     gap: 12, // Modern way to add spacin
-    backgroundColor: "#708abb",
+    backgroundColor: "#c2dbf5",
+    borderColor: "#1b5ea7",
+    borderWidth: 1,
   },
   button: {
     paddingVertical: 5,
